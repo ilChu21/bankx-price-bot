@@ -17,7 +17,7 @@ export const handler = async (event: any) => {
     const sentMsg = await telegram.sendMsg(bankXMessage);
     if (sentMsg && sentMsg.message_id) {
       const lastSentMessageId = sentMsg.message_id;
-      await retryOperation(() => telegram.deleteMsg(lastSentMessageId - 1), 5);
+      await retryOperation(() => telegram.deleteMsg(lastSentMessageId), 5);
     }
 
     const response = {

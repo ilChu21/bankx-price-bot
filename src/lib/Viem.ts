@@ -14,6 +14,7 @@ import {
   avalanche,
   base,
 } from 'viem/chains';
+import { BlockchainData } from '../types';
 
 export class Viem {
   private ethClient;
@@ -85,7 +86,7 @@ export class Viem {
     }, {} as Record<string, number>);
   }
 
-  public async getBlockchainData() {
+  public async getBlockchainData(): Promise<BlockchainData> {
     const configs = {
       eth: {
         client: this.ethClient,
