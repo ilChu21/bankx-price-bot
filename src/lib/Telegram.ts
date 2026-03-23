@@ -22,7 +22,7 @@ export class Telegram {
     const _bankxChatId = BANKX_CHAT_ID;
     if (!_token || !_chatId || !_bankxChatId) {
       console.error(
-        'Please set TELEGRAM_API_KEY, CHAT_ID, and BANKX_CHAT_ID in your .env file'
+        'Please set TELEGRAM_API_KEY, CHAT_ID, and BANKX_CHAT_ID in your .env file',
       );
       process.exit(1);
     }
@@ -42,14 +42,15 @@ export class Telegram {
       { key: 'optimism', label: 'OPT' },
       { key: 'avalanche', label: 'AVAX' },
       { key: 'base', label: 'BASE' },
+      { key: 'pulsechain', label: 'PULSE' },
     ] as const;
 
     const sections = chains.map(({ key, label }) => {
       const xsdKey = `${key}XsdPrice` as keyof BlockchainData;
       const bankxKey = `${key}BankxPrice` as keyof BlockchainData;
 
-      const xsd = roundDown(data[xsdKey], 2);
-      const bankx = data[bankxKey];
+      const xsd = roundDown(data[xsdKey], 4);
+      const bankx = roundDown(data[bankxKey], 6);
 
       return `
 <b>${label}</b>
@@ -71,7 +72,7 @@ ${sections.join('')}
 
   public async sendMsg(
     message: string,
-    useAltChat: boolean = false
+    useAltChat: boolean = false,
   ): Promise<Message | null> {
     try {
       const options: SendMessageOptions = {
@@ -84,7 +85,7 @@ ${sections.join('')}
       const sentMessage = await this.bot.sendMessage(
         targetChatId,
         message,
-        options
+        options,
       );
       return sentMessage;
     } catch (error) {
